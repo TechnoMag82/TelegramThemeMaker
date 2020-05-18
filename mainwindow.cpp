@@ -118,7 +118,9 @@ void MainWindow::doubleClicked1(const QModelIndex &index)
 {
     if (index.column() == 2) {
         mCurrentThemeItem = model->getByIndex(index);
-        QColor color = QColorDialog::getColor(mCurrentThemeItem->getColor(), this);
+        QColor color = QColorDialog::getColor(mCurrentThemeItem->getColor(), this,
+                                              tr("Color for ") + mCurrentThemeItem->name,
+                                              QColorDialog::ShowAlphaChannel);
         if (color.isValid()) {
             mCurrentThemeItem->setRawColor(qColorToRaw(color));
             model->refreshData();
