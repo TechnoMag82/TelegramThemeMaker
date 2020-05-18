@@ -10,6 +10,7 @@
 #include "themeitem.h"
 #include "themeloader.h"
 #include "themetablemodel.h"
+#include "dialogs/aboutdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -49,6 +50,7 @@ private slots:
     void searchName(const QString text);
     void prevSearch();
     void nextSearch();
+    void aboutDialog();
 };
 
 #endif // MAINWINDOW_H

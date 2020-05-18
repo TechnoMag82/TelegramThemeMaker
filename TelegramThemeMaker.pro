@@ -28,13 +28,16 @@ SOURCES += \
         mainwindow.cpp \
     themeitem.cpp \
     themeloader.cpp \
+    dialogs/aboutdialog.cpp \
     themetablemodel.cpp
 
 HEADERS += \
         mainwindow.h \
     themeitem.h \
     themeloader.h \
+    dialogs/aboutdialog.h \
     themetablemodel.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        dialogs/aboutdialog.ui

@@ -32,6 +32,9 @@ void MainWindow::initMainMenu()
 
     connect(ui->actionSaveAs, SIGNAL(triggered()),
                 this, SLOT(saveThemeAs()));
+
+    connect(ui->actionAbout, SIGNAL(triggered()),
+                this, SLOT(aboutDialog()));
 }
 
 void MainWindow::openTheme()
@@ -130,16 +133,22 @@ void MainWindow::doubleClicked1(const QModelIndex &index)
 
 void MainWindow::searchName(const QString text)
 {
-    if (theme != nullptr && theme->size() > 0 && text.size() > 3) {
+    int themeSize = theme->size();
+    if (theme != nullptr && themeSize > 0 && text.size() > 3) {
         findedPositions->clear();
-        for (int i = 0; i < theme->size(); i++) {
+        for (int i = 0; i < themeSize - 1; i++) {
             if (theme->at(i)->name.contains(text, Qt::CaseInsensitive)) {
                 findedPositions->append(i);
             }
         }
-        currentSearchPosition = 0;
-        findedCount = findedPositions->size() - 1;
-        gotoSearchPosition();
+        if (findedPositions->size() > 0) {
+            currentSearchPosition = 0;
+            findedCount = findedPositions->size() - 1;
+            gotoSearchPosition();
+        } else {
+            findedCount = 0;
+            ui->labelFinded->setText(QString("0 of 0"));
+        }
     } else {
         findedCount = 0;
         ui->labelFinded->setText(QString("0 of 0"));
@@ -160,4 +169,11 @@ void MainWindow::nextSearch()
         currentSearchPosition++;
         gotoSearchPosition();
     }
+}
+
+void MainWindow::aboutDialog()
+{
+    AboutDialog *aboutDialog = new AboutDialog(this);
+    aboutDialog->exec();
+    delete aboutDialog;
 }
