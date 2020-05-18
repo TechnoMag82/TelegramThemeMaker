@@ -14,6 +14,10 @@ void ThemeLoader::loadTheme(QString filePath, QList<ThemeItem *> &theme)
         QTextStream stream(&file);
         while (!stream.atEnd()) {
             line = stream.readLine();
+            if (line.contains("WPS", Qt::CaseSensitive)) {
+                file.close();
+                return;
+            }
             if (!line.isEmpty()) {
                 int pos = line.indexOf('=');
                 QString name = line.left(pos);
