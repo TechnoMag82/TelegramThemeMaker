@@ -17,6 +17,7 @@ void ThemeTableModel::assignData(QList<ThemeItem *> *atheme)
 void ThemeTableModel::refreshData()
 {
     beginResetModel();
+    size = theme->size();
     endResetModel();
 }
 

@@ -42,6 +42,12 @@ void MainWindow::initMainMenu()
 
     connect(ui->actionAbout, SIGNAL(triggered()),
                 this, SLOT(aboutDialog()));
+
+    connect(ui->actionAddColor, SIGNAL(triggered()),
+                this, SLOT(addViewColor()));
+
+    connect(ui->actionDeleteColor, SIGNAL(triggered()),
+                this, SLOT(deleteViewColor()));
 }
 
 void MainWindow::openTheme()
@@ -95,6 +101,9 @@ void MainWindow::initTableViewColors()
 {
     connect(ui->tableViewColors, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(doubleClicked1(const QModelIndex &)));
+
+    connect(ui->tableViewColors, SIGNAL(clicked(const QModelIndex &)),
+            this, SLOT(clicked1(const QModelIndex &)));
 
     connect(ui->lineEditSearch, SIGNAL(textEdited(QString)),
             this, SLOT(searchName(QString)));
@@ -159,7 +168,7 @@ void MainWindow::searchName(const QString text)
     int themeSize = theme->size();
     if (theme != nullptr && themeSize > 0 && text.size() > 3) {
         findedPositions->clear();
-        for (int i = 0; i < themeSize - 1; i++) {
+        for (int i = 0; i < themeSize; i++) {
             if (theme->at(i)->name.contains(text, Qt::CaseInsensitive)) {
                 findedPositions->append(i);
             }
@@ -221,4 +230,42 @@ void MainWindow::selectWallpaper()
         ui->labelWP->setPixmap(img);
         ui->labelWP->setVisible(true);
     }
+}
+
+void MainWindow::addViewColor()
+{
+    bool bOk;
+    QString str = QInputDialog::getText(this,
+                    tr("New view color"),
+                    tr("View name:"),
+                    QLineEdit::Normal,
+                    "new_view_name",
+                    &bOk);
+    if (bOk) {
+        ThemeItem *themeItem = new ThemeItem();
+        themeItem->name = str;
+        themeItem->setRawColor(-1);
+        theme->append(themeItem);
+        model->refreshData();
+    }
+}
+
+void MainWindow::deleteViewColor()
+{
+    QMessageBox* messageBox =
+                new QMessageBox(QMessageBox::Question,
+                    tr("Delete view color"),
+                    QString(tr("Do you want to remove view color '%1'?")).arg(mCurrentThemeItem->name),
+                    QMessageBox::Yes | QMessageBox::No,
+                    this);
+    if (messageBox->exec() == QMessageBox::Yes) {
+        theme->removeOne(mCurrentThemeItem);
+        model->refreshData();
+    }
+    delete messageBox;
+}
+
+void MainWindow::clicked1(const QModelIndex &index)
+{
+    mCurrentThemeItem = model->getByIndex(index);
 }

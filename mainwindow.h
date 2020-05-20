@@ -6,6 +6,8 @@
 #include <QList>
 #include <QItemSelectionModel>
 #include <QColorDialog>
+#include <QInputDialog>
+#include <QMessageBox>
 
 #include "themeitem.h"
 #include "themeloader.h"
@@ -55,6 +57,9 @@ private slots:
     void aboutDialog();
     void deleteWallpaper();
     void selectWallpaper();
+    void addViewColor();
+    void deleteViewColor();
+    void clicked1(const QModelIndex &index);
 };
 
 #endif // MAINWINDOW_H

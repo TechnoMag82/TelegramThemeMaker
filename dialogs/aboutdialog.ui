@@ -46,7 +46,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is a tool for create Telegram themes based ondefault themes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Is a tool for create Telegram themes based on default themes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
@@ -65,10 +65,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Developed by Iliya Kobzev aka TechnoMag.may 2020</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Developed by Iliya Kobzev aka TechnoMag. May 2020&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="textFormat">
-    <enum>Qt::PlainText</enum>
+    <enum>Qt::RichText</enum>
    </property>
   </widget>
  </widget>

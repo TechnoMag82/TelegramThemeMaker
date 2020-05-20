@@ -176,6 +176,9 @@
     </property>
     <addaction name="actionSelectWallpaper"/>
     <addaction name="actionDeleteWallpaper"/>
+    <addaction name="separator"/>
+    <addaction name="actionAddColor"/>
+    <addaction name="actionDeleteColor"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -241,6 +244,16 @@
   <action name="actionDeleteWallpaper">
    <property name="text">
     <string>Delete Wallpaper</string>
+   </property>
+  </action>
+  <action name="actionAddColor">
+   <property name="text">
+    <string>Add view color ...</string>
+   </property>
+  </action>
+  <action name="actionDeleteColor">
+   <property name="text">
+    <string>Delete view color</string>
    </property>
   </action>
  </widget>
