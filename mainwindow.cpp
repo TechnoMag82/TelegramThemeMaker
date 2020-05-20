@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tableViewColors->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->labelWP->setVisible(false);
     theme = new QList<ThemeItem*>();
     findedPositions = new QList<int>();
     initMainMenu();
@@ -33,6 +34,12 @@ void MainWindow::initMainMenu()
     connect(ui->actionSaveAs, SIGNAL(triggered()),
                 this, SLOT(saveThemeAs()));
 
+    connect(ui->actionDeleteWallpaper, SIGNAL(triggered()),
+                this, SLOT(deleteWallpaper()));
+
+    connect(ui->actionSelectWallpaper, SIGNAL(triggered()),
+                this, SLOT(selectWallpaper()));
+
     connect(ui->actionAbout, SIGNAL(triggered()),
                 this, SLOT(aboutDialog()));
 }
@@ -43,6 +50,14 @@ void MainWindow::openTheme()
     if (!themePath.isNull() && !themePath.isEmpty()) {
         ThemeLoader *loader = new ThemeLoader();
         loader->loadTheme(themePath, *theme);
+        hasWallpaper = loader->isWallpaperExist();
+        if (hasWallpaper) {
+            wpPath = "wallpaper.jpg";
+            QPixmap img("wallpaper.jpg");
+            img.scaledToWidth(ui->labelWP->width());
+            ui->labelWP->setPixmap(img);
+            ui->labelWP->setVisible(true);
+        }
         if (model == nullptr) {
             model = new ThemeTableModel(ui->tableViewColors, QCoreApplication::applicationDirPath());
         }
@@ -60,17 +75,19 @@ void MainWindow::openTheme()
 
 void MainWindow::saveThemeAs()
 {
-    QString themePath = QFileDialog::getSaveFileName(this, tr("Save Theme"), workingDirectory, "*.attheme");
-    if (!themePath.isNull() && !themePath.isEmpty()) {
-        if (!themePath.endsWith(".attheme")) {
-            themePath.append(".attheme");
+    if (theme != nullptr && theme->size() > 0) {
+        QString themePath = QFileDialog::getSaveFileName(this, tr("Save Theme"), workingDirectory, "*.attheme");
+        if (!themePath.isNull() && !themePath.isEmpty()) {
+            if (!themePath.endsWith(".attheme")) {
+                themePath.append(".attheme");
+            }
+            saveTheme(themePath);
+            QFileInfo file(themePath);
+            QDir dir = file.absoluteDir();
+            workingDirectory = dir.absolutePath();
+            openedThemePath = themePath;
+            setWindowTitle(QString("%1 - [%2]").arg(QCoreApplication::applicationName(), file.fileName()));
         }
-        saveTheme(themePath);
-        QFileInfo file(themePath);
-        QDir dir = file.absoluteDir();
-        workingDirectory = dir.absolutePath();
-        openedThemePath = themePath;
-        setWindowTitle(QString("%1 - [%2]").arg(QCoreApplication::applicationName(), file.fileName()));
     }
 }
 
@@ -100,7 +117,11 @@ int MainWindow::qColorToRaw(QColor color)
 void MainWindow::saveTheme(QString filePath)
 {
     ThemeLoader *loader = new ThemeLoader();
-    loader->saveTheme(filePath, *theme);
+    if (hasWallpaper) {
+        loader->saveTheme(filePath, *theme, wpPath);
+    } else {
+        loader->saveTheme(filePath, *theme);
+    }
     delete loader;
 }
 
@@ -114,7 +135,9 @@ void MainWindow::gotoSearchPosition()
 
 void MainWindow::saveTheme()
 {
-    saveTheme(openedThemePath);
+    if (theme != nullptr && theme->size() > 0) {
+        saveTheme(openedThemePath);
+    }
 }
 
 void MainWindow::doubleClicked1(const QModelIndex &index)
@@ -176,4 +199,26 @@ void MainWindow::aboutDialog()
     AboutDialog *aboutDialog = new AboutDialog(this);
     aboutDialog->exec();
     delete aboutDialog;
+}
+
+void MainWindow::deleteWallpaper()
+{
+    ThemeLoader *loader = new ThemeLoader();
+    loader->deleteWallpaper();
+    delete loader;
+    hasWallpaper = false;
+    ui->labelWP->setText(tr("No Wallpaper"));
+    ui->labelWP->setVisible(false);
+}
+
+void MainWindow::selectWallpaper()
+{
+    wpPath = QFileDialog::getOpenFileName(this, tr("Open Wallpaper"), workingDirectory, "*.jpg");
+    if (!wpPath.isNull() && !wpPath.isEmpty()) {
+        QPixmap img(wpPath);
+        hasWallpaper = true;
+        img.scaledToWidth(ui->labelWP->width());
+        ui->labelWP->setPixmap(img);
+        ui->labelWP->setVisible(true);
+    }
 }

@@ -31,11 +31,13 @@ private:
     QList<int> *findedPositions = nullptr;
     int currentSearchPosition = -1;
     int findedCount = 0;
+    bool hasWallpaper = false;
     ThemeTableModel *model = nullptr;
     ThemeItem *mCurrentThemeItem = nullptr;
     QItemSelectionModel *selectionModelTableViewColors = nullptr;
     QString openedThemePath;
     QString workingDirectory = ".";
+    QString wpPath = "";
 
     void initTableViewColors();
     int qColorToRaw(QColor color);
@@ -51,6 +53,8 @@ private slots:
     void prevSearch();
     void nextSearch();
     void aboutDialog();
+    void deleteWallpaper();
+    void selectWallpaper();
 };
 
 #endif // MAINWINDOW_H
