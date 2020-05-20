@@ -212,57 +212,66 @@ void MainWindow::aboutDialog()
 
 void MainWindow::deleteWallpaper()
 {
-    ThemeLoader *loader = new ThemeLoader();
-    loader->deleteWallpaper();
-    delete loader;
-    hasWallpaper = false;
-    ui->labelWP->setText(tr("No Wallpaper"));
-    ui->labelWP->setVisible(false);
+    if (theme != nullptr && theme->size() > 0) {
+        ThemeLoader *loader = new ThemeLoader();
+        loader->deleteWallpaper();
+        delete loader;
+        hasWallpaper = false;
+        ui->labelWP->setText(tr("No Wallpaper"));
+        ui->labelWP->setVisible(false);
+    }
 }
 
 void MainWindow::selectWallpaper()
 {
-    wpPath = QFileDialog::getOpenFileName(this, tr("Open Wallpaper"), workingDirectory, "*.jpg");
-    if (!wpPath.isNull() && !wpPath.isEmpty()) {
-        QPixmap img(wpPath);
-        hasWallpaper = true;
-        img.scaledToWidth(ui->labelWP->width());
-        ui->labelWP->setPixmap(img);
-        ui->labelWP->setVisible(true);
+    if (theme != nullptr && theme->size() > 0) {
+        wpPath = QFileDialog::getOpenFileName(this, tr("Open Wallpaper"), workingDirectory, "*.jpg");
+        if (!wpPath.isNull() && !wpPath.isEmpty()) {
+            QPixmap img(wpPath);
+            hasWallpaper = true;
+            img.scaledToWidth(ui->labelWP->width());
+            ui->labelWP->setPixmap(img);
+            ui->labelWP->setVisible(true);
+        }
     }
 }
 
 void MainWindow::addViewColor()
 {
-    bool bOk;
-    QString str = QInputDialog::getText(this,
-                    tr("New view color"),
-                    tr("View name:"),
-                    QLineEdit::Normal,
-                    "new_view_name",
-                    &bOk);
-    if (bOk) {
-        ThemeItem *themeItem = new ThemeItem();
-        themeItem->name = str;
-        themeItem->setRawColor(-1);
-        theme->append(themeItem);
-        model->refreshData();
+    if (theme != nullptr && theme->size() > 0) {
+        bool bOk;
+        QString str = QInputDialog::getText(this,
+                        tr("New view color"),
+                        tr("View name:"),
+                        QLineEdit::Normal,
+                        "new_view_name",
+                        &bOk);
+        if (bOk) {
+            ThemeItem *themeItem = new ThemeItem();
+            themeItem->name = str;
+            themeItem->setRawColor(-1);
+            theme->append(themeItem);
+            model->refreshData();
+        }
     }
 }
 
 void MainWindow::deleteViewColor()
 {
-    QMessageBox* messageBox =
-                new QMessageBox(QMessageBox::Question,
-                    tr("Delete view color"),
-                    QString(tr("Do you want to remove view color '%1'?")).arg(mCurrentThemeItem->name),
-                    QMessageBox::Yes | QMessageBox::No,
-                    this);
-    if (messageBox->exec() == QMessageBox::Yes) {
-        theme->removeOne(mCurrentThemeItem);
-        model->refreshData();
+    if (mCurrentThemeItem != nullptr) {
+        QMessageBox* messageBox =
+                    new QMessageBox(QMessageBox::Question,
+                        tr("Delete view color"),
+                        QString(tr("Do you want to remove view color '%1'?")).arg(mCurrentThemeItem->name),
+                        QMessageBox::Yes | QMessageBox::No,
+                        this);
+        if (messageBox->exec() == QMessageBox::Yes) {
+            theme->removeOne(mCurrentThemeItem);
+            model->refreshData();
+            mCurrentThemeItem = nullptr;
+        }
+        delete messageBox;
     }
-    delete messageBox;
 }
 
 void MainWindow::clicked1(const QModelIndex &index)
