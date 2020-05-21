@@ -28,12 +28,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    void initMainMenu();
     QList<ThemeItem *> *theme = nullptr;
     QList<int> *findedPositions = nullptr;
     int currentSearchPosition = -1;
     int findedCount = 0;
     bool hasWallpaper = false;
+    bool themeChanged = false;
     ThemeTableModel *model = nullptr;
     ThemeItem *mCurrentThemeItem = nullptr;
     QItemSelectionModel *selectionModelTableViewColors = nullptr;
@@ -41,10 +41,12 @@ private:
     QString workingDirectory = ".";
     QString wpPath = "";
 
+    void initMainMenu();
     void initTableViewColors();
     int qColorToRaw(QColor color);
     void saveTheme(QString filePath);
     void gotoSearchPosition();
+    void setThemeChangeStatus(bool changed);
 
 private slots:
     void openTheme();
@@ -60,6 +62,7 @@ private slots:
     void addViewColor();
     void deleteViewColor();
     void clicked1(const QModelIndex &index);
+    void exitApp();
 };
 
 #endif // MAINWINDOW_H

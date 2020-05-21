@@ -48,6 +48,9 @@ void MainWindow::initMainMenu()
 
     connect(ui->actionDeleteColor, SIGNAL(triggered()),
                 this, SLOT(deleteViewColor()));
+
+    connect(ui->actionExit, SIGNAL(triggered()),
+                this, SLOT(exitApp()));
 }
 
 void MainWindow::openTheme()
@@ -63,6 +66,9 @@ void MainWindow::openTheme()
             img.scaledToWidth(ui->labelWP->width());
             ui->labelWP->setPixmap(img);
             ui->labelWP->setVisible(true);
+        } else {
+            ui->labelWP->setText(tr("No Wallpaper"));
+            ui->labelWP->setVisible(false);
         }
         if (model == nullptr) {
             model = new ThemeTableModel(ui->tableViewColors, QCoreApplication::applicationDirPath());
@@ -75,7 +81,7 @@ void MainWindow::openTheme()
         QDir dir = file.absoluteDir();
         workingDirectory = dir.absolutePath();
         openedThemePath = themePath;
-        setWindowTitle(QString("%1 - [%2]").arg(QCoreApplication::applicationName(), file.fileName()));
+        setThemeChangeStatus(false);
     }
 }
 
@@ -132,6 +138,7 @@ void MainWindow::saveTheme(QString filePath)
         loader->saveTheme(filePath, *theme);
     }
     delete loader;
+    setThemeChangeStatus(false);
 }
 
 void MainWindow::gotoSearchPosition()
@@ -140,6 +147,16 @@ void MainWindow::gotoSearchPosition()
     ui->tableViewColors->setCurrentIndex(index);
     ui->tableViewColors->scrollTo(index);
     ui->labelFinded->setText(QString("%1 of %2").arg(QString::number(currentSearchPosition + 1), QString::number(findedCount + 1)));
+}
+
+void MainWindow::setThemeChangeStatus(bool changed)
+{
+    themeChanged = changed;
+    if (themeChanged == false) {
+        setWindowTitle(QString("%1 - [%2]").arg(QCoreApplication::applicationName(), openedThemePath));
+    } else {
+        setWindowTitle(QString("%1 - [%2 *]").arg(QCoreApplication::applicationName(), openedThemePath));
+    }
 }
 
 void MainWindow::saveTheme()
@@ -159,6 +176,7 @@ void MainWindow::doubleClicked1(const QModelIndex &index)
         if (color.isValid()) {
             mCurrentThemeItem->setRawColor(qColorToRaw(color));
             model->refreshData();
+            setThemeChangeStatus(true);
         }
     }
 }
@@ -219,6 +237,7 @@ void MainWindow::deleteWallpaper()
         hasWallpaper = false;
         ui->labelWP->setText(tr("No Wallpaper"));
         ui->labelWP->setVisible(false);
+        setThemeChangeStatus(true);
     }
 }
 
@@ -232,6 +251,7 @@ void MainWindow::selectWallpaper()
             img.scaledToWidth(ui->labelWP->width());
             ui->labelWP->setPixmap(img);
             ui->labelWP->setVisible(true);
+            setThemeChangeStatus(true);
         }
     }
 }
@@ -252,6 +272,7 @@ void MainWindow::addViewColor()
             themeItem->setRawColor(-1);
             theme->append(themeItem);
             model->refreshData();
+            setThemeChangeStatus(true);
         }
     }
 }
@@ -269,6 +290,7 @@ void MainWindow::deleteViewColor()
             theme->removeOne(mCurrentThemeItem);
             model->refreshData();
             mCurrentThemeItem = nullptr;
+            setThemeChangeStatus(true);
         }
         delete messageBox;
     }
@@ -277,4 +299,20 @@ void MainWindow::deleteViewColor()
 void MainWindow::clicked1(const QModelIndex &index)
 {
     mCurrentThemeItem = model->getByIndex(index);
+}
+
+void MainWindow::exitApp()
+{
+    if (themeChanged) {
+        QMessageBox* messageBox =
+                    new QMessageBox(QMessageBox::Question,
+                        tr("Exit"),
+                        QString(tr("Theme has been changed. Do you want to save changes?")),
+                        QMessageBox::Yes | QMessageBox::No,
+                        this);
+        if (messageBox->exec() == QMessageBox::Yes) {
+            saveTheme(openedThemePath);
+        }
+    }
+    close();
 }

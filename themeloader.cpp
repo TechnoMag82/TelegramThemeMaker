@@ -126,7 +126,6 @@ void ThemeLoader::saveImageTheme(QString filePath, QString imagePath)
                 QDataStream out_stream(&themeFile);
                 int treaded = out_stream.readRawData(themeData, sizeThemeForRead);
                 if (treaded != -1) {
-                    out_stream.writeRawData(themeData, treaded);
                     out_stream.writeRawData(wps, 4);
                     out_stream.writeRawData(imgData, readed);
                     out_stream.writeRawData(wpe, 5);
