@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QFileInfo>
 #include <QDir>
+#include <QDateTime>
 
 #include "themeitem.h"
 
@@ -15,10 +16,10 @@ public:
     ThemeLoader();
     void loadTheme(QString filePath, QList<ThemeItem*> &theme);
     void saveTheme(QString filePath, QList<ThemeItem*> &theme, QString imagePath = 0);
-    bool isWallpaperExist();
-    void deleteWallpaper();
+    QString wallpaperPath();
+    void deleteWallpaper(QString wallpaper);
 private:
-    bool hasWallpaper = false;
+    QString mWallpaperPath = "";
     void makeDirIfNotExist(const QString &path);
     void getImageFile(QString filePath, qint64 startPos);
     void saveImageTheme(QString filePath, QString imagePath);

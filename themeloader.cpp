@@ -63,15 +63,17 @@ void ThemeLoader::saveTheme(QString filePath, QList<ThemeItem *> &theme, QString
     }
 }
 
-bool ThemeLoader::isWallpaperExist()
+QString ThemeLoader::wallpaperPath()
 {
-    return hasWallpaper;
+    return mWallpaperPath;
 }
 
-void ThemeLoader::deleteWallpaper()
+void ThemeLoader::deleteWallpaper(QString wallpaper)
 {
-    QFile fi("wallpaper.jpg");
-    fi.remove();
+    if (wallpaper.startsWith("wallpaper-")) {
+        QFile fi(wallpaper);
+        fi.remove();
+    }
 }
 
 void ThemeLoader::makeDirIfNotExist(const QString &path)
@@ -93,7 +95,8 @@ void ThemeLoader::getImageFile(QString filePath, qint64 startPos)
         if (skipped != -1) {
             int readed = stream.readRawData(data, sizeForRead);
             if (readed != -1) {
-                QFile imgFile("wallpaper.jpg");
+                mWallpaperPath = "wallpaper-" + QDateTime::currentDateTime().toString("dd.MM.yyyy_hh:mm:ss") + ".jpg";
+                QFile imgFile(mWallpaperPath);
                 if(imgFile.open(QIODevice::WriteOnly)) {
                     QDataStream out_stream(&imgFile);
                     out_stream.writeRawData(data, readed);
@@ -104,7 +107,6 @@ void ThemeLoader::getImageFile(QString filePath, qint64 startPos)
     }
     file.close();
     delete data;
-    hasWallpaper = true;
 }
 
 void ThemeLoader::saveImageTheme(QString filePath, QString imagePath)
@@ -137,6 +139,4 @@ void ThemeLoader::saveImageTheme(QString filePath, QString imagePath)
     }
     imgFile.close();
     delete imgData;
-    hasWallpaper = true;
 }
-

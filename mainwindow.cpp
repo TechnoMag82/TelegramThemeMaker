@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    ThemeLoader *loader = new ThemeLoader();
+    loader->deleteWallpaper(wpPath);
+    delete loader;
     theme->clear();
     findedPositions->clear();
     delete findedPositions;
@@ -58,11 +61,11 @@ void MainWindow::openTheme()
     QString themePath = QFileDialog::getOpenFileName(this, tr("Open Theme"), workingDirectory, "*.attheme");
     if (!themePath.isNull() && !themePath.isEmpty()) {
         ThemeLoader *loader = new ThemeLoader();
+        loader->deleteWallpaper(wpPath);
         loader->loadTheme(themePath, *theme);
-        hasWallpaper = loader->isWallpaperExist();
-        if (hasWallpaper) {
-            wpPath = "wallpaper.jpg";
-            QPixmap img("wallpaper.jpg");
+        wpPath = loader->wallpaperPath();
+        if (wpPath.length() > 0) {
+            QPixmap img(wpPath);
             img.scaledToWidth(ui->labelWP->width());
             ui->labelWP->setPixmap(img);
             ui->labelWP->setVisible(true);
@@ -132,7 +135,7 @@ int MainWindow::qColorToRaw(QColor color)
 void MainWindow::saveTheme(QString filePath)
 {
     ThemeLoader *loader = new ThemeLoader();
-    if (hasWallpaper) {
+    if (wpPath.length() > 0) {
         loader->saveTheme(filePath, *theme, wpPath);
     } else {
         loader->saveTheme(filePath, *theme);
@@ -232,9 +235,9 @@ void MainWindow::deleteWallpaper()
 {
     if (theme != nullptr && theme->size() > 0) {
         ThemeLoader *loader = new ThemeLoader();
-        loader->deleteWallpaper();
+        loader->deleteWallpaper(wpPath);
         delete loader;
-        hasWallpaper = false;
+        wpPath = "";
         ui->labelWP->setText(tr("No Wallpaper"));
         ui->labelWP->setVisible(false);
         setThemeChangeStatus(true);
@@ -244,14 +247,16 @@ void MainWindow::deleteWallpaper()
 void MainWindow::selectWallpaper()
 {
     if (theme != nullptr && theme->size() > 0) {
+        QString mTempPath = wpPath;
         wpPath = QFileDialog::getOpenFileName(this, tr("Open Wallpaper"), workingDirectory, "*.jpg");
         if (!wpPath.isNull() && !wpPath.isEmpty()) {
             QPixmap img(wpPath);
-            hasWallpaper = true;
             img.scaledToWidth(ui->labelWP->width());
             ui->labelWP->setPixmap(img);
             ui->labelWP->setVisible(true);
             setThemeChangeStatus(true);
+        } else {
+            wpPath = mTempPath;
         }
     }
 }

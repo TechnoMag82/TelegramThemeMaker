@@ -32,7 +32,6 @@ private:
     QList<int> *findedPositions = nullptr;
     int currentSearchPosition = -1;
     int findedCount = 0;
-    bool hasWallpaper = false;
     bool themeChanged = false;
     ThemeTableModel *model = nullptr;
     ThemeItem *mCurrentThemeItem = nullptr;
