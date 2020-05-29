@@ -8,10 +8,36 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->tableViewColors->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->labelWP->setVisible(false);
+    ui->tableViewColors->setContextMenuPolicy(Qt::CustomContextMenu);
     theme = new QList<ThemeItem*>();
     findedPositions = new QList<int>();
     initMainMenu();
     initTableViewColors();
+    createTableColorsPopupMenu();
+    connect(ui->tableViewColors, SIGNAL(customContextMenuRequested(QPoint)),
+               SLOT(customMenuRequested(QPoint)));
+}
+
+void MainWindow::customMenuRequested(QPoint pos){
+    if (popupMenuTableColors != nullptr && model != nullptr) {
+        QModelIndex index = ui->tableViewColors->indexAt(pos);
+        mCurrentThemeItem = model->getByIndex(index);
+        popupMenuTableColors->popup(ui->tableViewColors->viewport()->mapToGlobal(pos));
+    }
+}
+
+void MainWindow::copyViewName()
+{
+    if (mCurrentThemeItem != nullptr) {
+        QApplication::clipboard()->setText(mCurrentThemeItem->name);
+    }
+}
+
+void MainWindow::copyViewColor()
+{
+    if (mCurrentThemeItem != nullptr) {
+        QApplication::clipboard()->setText(mCurrentThemeItem->getColor().name());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -21,6 +47,7 @@ MainWindow::~MainWindow()
     delete loader;
     theme->clear();
     findedPositions->clear();
+    delete popupMenuTableColors;
     delete findedPositions;
     delete theme;
     delete ui;
@@ -162,6 +189,17 @@ void MainWindow::setThemeChangeStatus(bool changed)
     }
 }
 
+void MainWindow::createTableColorsPopupMenu()
+{
+    popupMenuTableColors = new QMenu(this);
+    QAction *action = new QAction(tr("Copy view name"), this);
+    popupMenuTableColors->addAction(action);
+    connect(action, &QAction::triggered, this, &MainWindow::copyViewName);
+    action = new QAction(tr("Copy view color"), this);
+    popupMenuTableColors->addAction(action);
+    connect(action, &QAction::triggered, this, &MainWindow::copyViewColor);
+}
+
 void MainWindow::saveTheme()
 {
     if (theme != nullptr && theme->size() > 0) {
@@ -187,7 +225,7 @@ void MainWindow::doubleClicked1(const QModelIndex &index)
 void MainWindow::searchName(const QString text)
 {
     int themeSize = theme->size();
-    if (theme != nullptr && themeSize > 0 && text.size() > 3) {
+    if (theme != nullptr && themeSize > 0 && text.size() >= 3) {
         findedPositions->clear();
         for (int i = 0; i < themeSize; i++) {
             if (theme->at(i)->name.contains(text, Qt::CaseInsensitive)) {

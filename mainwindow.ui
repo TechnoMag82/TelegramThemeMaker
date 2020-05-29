@@ -39,6 +39,9 @@
           <property name="placeholderText">
            <string>Enter view name to find color</string>
           </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
