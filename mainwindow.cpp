@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tableViewColors->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableViewColors->verticalHeader()->setFixedWidth(60);
     ui->labelWP->setVisible(false);
     ui->tableViewColors->setContextMenuPolicy(Qt::CustomContextMenu);
     theme = new QList<ThemeItem*>();
@@ -16,6 +17,28 @@ MainWindow::MainWindow(QWidget *parent) :
     createTableColorsPopupMenu();
     connect(ui->tableViewColors, SIGNAL(customContextMenuRequested(QPoint)),
                SLOT(customMenuRequested(QPoint)));
+}
+
+
+void MainWindow::initStatusBar()
+{
+    if (mStatusBarText == nullptr) {
+        mStatusBarText = new QLabel(ui->statusBar);
+        mStatusBarText->setFrameStyle(QFrame::Box);
+        ui->statusBar->addPermanentWidget(mStatusBarText);
+    }
+    mStatusBarText->setText(QString(tr("Items: %1")).arg(theme->count()));
+}
+
+bool MainWindow::isAnyModified()
+{
+    int size = theme->count();
+    for (int i = 0; i < size; i++) {
+        if (theme->at(i)->isModified()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void MainWindow::customMenuRequested(QPoint pos){
@@ -40,13 +63,22 @@ void MainWindow::copyViewColor()
     }
 }
 
+void MainWindow::resetColorToDefault()
+{
+    if (mCurrentThemeItem != nullptr) {
+        mCurrentThemeItem->resetToDefault();
+        setThemeChangeStatus();
+    }
+}
+
 MainWindow::~MainWindow()
 {
     ThemeLoader *loader = new ThemeLoader();
-    loader->deleteWallpaper(wpPath);
+    loader->deleteTempImageWallpaper(wpPath);
     delete loader;
     theme->clear();
     findedPositions->clear();
+    delete mStatusBarText;
     delete popupMenuTableColors;
     delete findedPositions;
     delete theme;
@@ -88,7 +120,7 @@ void MainWindow::openTheme()
     QString themePath = QFileDialog::getOpenFileName(this, tr("Open Theme"), workingDirectory, "*.attheme");
     if (!themePath.isNull() && !themePath.isEmpty()) {
         ThemeLoader *loader = new ThemeLoader();
-        loader->deleteWallpaper(wpPath);
+        loader->deleteTempImageWallpaper(wpPath);
         loader->loadTheme(themePath, *theme);
         wpPath = loader->wallpaperPath();
         if (wpPath.length() > 0) {
@@ -111,7 +143,9 @@ void MainWindow::openTheme()
         QDir dir = file.absoluteDir();
         workingDirectory = dir.absolutePath();
         openedThemePath = themePath;
-        setThemeChangeStatus(false);
+        wallpaperChanged = false;
+        setThemeChangeStatus();
+        initStatusBar();
     }
 }
 
@@ -151,14 +185,6 @@ void MainWindow::initTableViewColors()
             this, SLOT(nextSearch()));
 }
 
-int MainWindow::qColorToRaw(QColor color)
-{
-    return ((color.alpha() & 0xff) << 24)
-            + ((color.red() & 0xff) << 16)
-            + ((color.green() & 0xff) << 8)
-            + (color.blue() & 0xff);
-}
-
 void MainWindow::saveTheme(QString filePath)
 {
     ThemeLoader *loader = new ThemeLoader();
@@ -168,7 +194,8 @@ void MainWindow::saveTheme(QString filePath)
         loader->saveTheme(filePath, *theme);
     }
     delete loader;
-    setThemeChangeStatus(false);
+    wallpaperChanged = false;
+    setThemeChangeStatus();
 }
 
 void MainWindow::gotoSearchPosition()
@@ -179,13 +206,12 @@ void MainWindow::gotoSearchPosition()
     ui->labelFinded->setText(QString("%1 of %2").arg(QString::number(currentSearchPosition + 1), QString::number(findedCount + 1)));
 }
 
-void MainWindow::setThemeChangeStatus(bool changed)
+void MainWindow::setThemeChangeStatus()
 {
-    themeChanged = changed;
-    if (themeChanged == false) {
-        setWindowTitle(QString("%1 - [%2]").arg(QCoreApplication::applicationName(), openedThemePath));
-    } else {
+    if (wallpaperChanged || isAnyModified()) {
         setWindowTitle(QString("%1 - [%2 *]").arg(QCoreApplication::applicationName(), openedThemePath));
+    } else {
+        setWindowTitle(QString("%1 - [%2]").arg(QCoreApplication::applicationName(), openedThemePath));
     }
 }
 
@@ -198,6 +224,9 @@ void MainWindow::createTableColorsPopupMenu()
     action = new QAction(tr("Copy view color"), this);
     popupMenuTableColors->addAction(action);
     connect(action, &QAction::triggered, this, &MainWindow::copyViewColor);
+    action = new QAction(tr("ResetColorToDefault"), this);
+    popupMenuTableColors->addAction(action);
+    connect(action, &QAction::triggered, this, &MainWindow::resetColorToDefault);
 }
 
 void MainWindow::saveTheme()
@@ -209,7 +238,7 @@ void MainWindow::saveTheme()
 
 void MainWindow::doubleClicked1(const QModelIndex &index)
 {
-    if (index.column() == 2) {
+    if (index.column() == 0) {
         mCurrentThemeItem = model->getByIndex(index);
         QColor color = QColorDialog::getColor(mCurrentThemeItem->getColor(), this,
                                               tr("Color for ") + mCurrentThemeItem->name,
@@ -217,7 +246,7 @@ void MainWindow::doubleClicked1(const QModelIndex &index)
         if (color.isValid()) {
             mCurrentThemeItem->setRawColor(qColorToRaw(color));
             model->refreshData();
-            setThemeChangeStatus(true);
+            setThemeChangeStatus();
         }
     }
 }
@@ -273,12 +302,13 @@ void MainWindow::deleteWallpaper()
 {
     if (theme != nullptr && theme->size() > 0) {
         ThemeLoader *loader = new ThemeLoader();
-        loader->deleteWallpaper(wpPath);
+        loader->deleteTempImageWallpaper(wpPath);
         delete loader;
         wpPath = "";
         ui->labelWP->setText(tr("No Wallpaper"));
         ui->labelWP->setVisible(false);
-        setThemeChangeStatus(true);
+        wallpaperChanged = true;
+        setThemeChangeStatus();
     }
 }
 
@@ -292,7 +322,8 @@ void MainWindow::selectWallpaper()
             img.scaledToWidth(ui->labelWP->width());
             ui->labelWP->setPixmap(img);
             ui->labelWP->setVisible(true);
-            setThemeChangeStatus(true);
+            wallpaperChanged = true;
+            setThemeChangeStatus();
         } else {
             wpPath = mTempPath;
         }
@@ -303,7 +334,7 @@ void MainWindow::addViewColor()
 {
     if (theme != nullptr && theme->size() > 0) {
         bool bOk;
-        QString str = QInputDialog::getText(this,
+        QString colorName = QInputDialog::getText(this,
                         tr("New view color"),
                         tr("View name:"),
                         QLineEdit::Normal,
@@ -311,11 +342,11 @@ void MainWindow::addViewColor()
                         &bOk);
         if (bOk) {
             ThemeItem *themeItem = new ThemeItem();
-            themeItem->name = str;
+            themeItem->name = colorName;
             themeItem->setRawColor(-1);
             theme->append(themeItem);
             model->refreshData();
-            setThemeChangeStatus(true);
+            setThemeChangeStatus();
         }
     }
 }
@@ -333,7 +364,7 @@ void MainWindow::deleteViewColor()
             theme->removeOne(mCurrentThemeItem);
             model->refreshData();
             mCurrentThemeItem = nullptr;
-            setThemeChangeStatus(true);
+            setThemeChangeStatus();
         }
         delete messageBox;
     }
@@ -346,7 +377,7 @@ void MainWindow::clicked1(const QModelIndex &index)
 
 void MainWindow::exitApp()
 {
-    if (themeChanged) {
+    if (wallpaperChanged || isAnyModified()) {
         QMessageBox* messageBox =
                     new QMessageBox(QMessageBox::Question,
                         tr("Exit"),

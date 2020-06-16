@@ -36,7 +36,8 @@ HEADERS += \
     themeitem.h \
     themeloader.h \
     dialogs/aboutdialog.h \
-    themetablemodel.h
+    themetablemodel.h \
+    utils.h
 
 FORMS += \
         mainwindow.ui \

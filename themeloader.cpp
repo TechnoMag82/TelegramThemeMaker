@@ -28,9 +28,7 @@ void ThemeLoader::loadTheme(QString filePath, QList<ThemeItem *> &theme)
                 int pos = line.indexOf('=');
                 QString name = line.left(pos);
                 QString color = line.right(line.size() - 1 - pos);
-                ThemeItem *themeItem = new ThemeItem();
-                themeItem->name = name;
-                themeItem->setRawColor(color.toInt());
+                ThemeItem *themeItem = new ThemeItem(name, color.toInt());
                 theme.append(themeItem);
             }
         }
@@ -46,8 +44,10 @@ void ThemeLoader::saveTheme(QString filePath, QList<ThemeItem *> &theme, QString
     if(file.open(QIODevice::WriteOnly)) {
         ThemeItem *item = nullptr;
         QTextStream stream(&file);
-        for (int i = 0; i < theme.size(); i++) {
+        int size = theme.count();
+        for (int i = 0; i < size; i++) {
             item = theme.at(i);
+            item->resetModify();
             if (item->name.contains("chat_wallpaper")
                     && !imagePath.isNull()
                     && !imagePath.isEmpty())
@@ -68,7 +68,7 @@ QString ThemeLoader::wallpaperPath()
     return mWallpaperPath;
 }
 
-void ThemeLoader::deleteWallpaper(QString wallpaper)
+void ThemeLoader::deleteTempImageWallpaper(QString wallpaper)
 {
     if (wallpaper.startsWith("wallpaper-")) {
         QFile fi(wallpaper);

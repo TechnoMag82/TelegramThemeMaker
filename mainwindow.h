@@ -16,6 +16,7 @@
 #include "themeloader.h"
 #include "themetablemodel.h"
 #include "dialogs/aboutdialog.h"
+#include "utils.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,9 +36,10 @@ private:
     QList<int> *findedPositions = nullptr;
     ContextMenuTable *m_menu = nullptr;
     QMenu *popupMenuTableColors = nullptr;
+    QLabel *mStatusBarText = nullptr;
     int currentSearchPosition = -1;
     int findedCount = 0;
-    bool themeChanged = false;
+    bool wallpaperChanged = false;
     ThemeTableModel *model = nullptr;
     ThemeItem *mCurrentThemeItem = nullptr;
     QItemSelectionModel *selectionModelTableViewColors = nullptr;
@@ -47,12 +49,12 @@ private:
 
     void initMainMenu();
     void initTableViewColors();
-    int qColorToRaw(QColor color);
-//    QString qColorToString();
     void saveTheme(QString filePath);
     void gotoSearchPosition();
-    void setThemeChangeStatus(bool changed);
+    void setThemeChangeStatus();
     void createTableColorsPopupMenu();
+    void initStatusBar();
+    bool isAnyModified();
 
 private slots:
     void openTheme();
@@ -72,6 +74,7 @@ private slots:
     void customMenuRequested(QPoint pos);
     void copyViewName();
     void copyViewColor();
+    void resetColorToDefault();
 };
 
 #endif // MAINWINDOW_H

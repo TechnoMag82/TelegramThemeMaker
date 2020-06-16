@@ -17,7 +17,7 @@ public:
     void loadTheme(QString filePath, QList<ThemeItem*> &theme);
     void saveTheme(QString filePath, QList<ThemeItem*> &theme, QString imagePath = 0);
     QString wallpaperPath();
-    void deleteWallpaper(QString wallpaper);
+    void deleteTempImageWallpaper(QString wallpaper);
 private:
     QString mWallpaperPath = "";
     void makeDirIfNotExist(const QString &path);

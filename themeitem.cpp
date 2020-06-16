@@ -1,18 +1,30 @@
 #include "themeitem.h"
+#include "utils.h"
 
 ThemeItem::ThemeItem()
 {
+    modified = false;
+}
 
+ThemeItem::ThemeItem(QString name, int color)
+{
+    this->name = name;
+    modified = false;
+    mSetRawColor(color);
+}
+
+void ThemeItem::mSetRawColor(int color)
+{
+    oldColorRaw = colorRaw;
+    oldColorValue = colorValue;
+    colorRaw = color;
+    colorValue = colorFromRaw(color);
 }
 
 void ThemeItem::setRawColor(int color)
 {
-    colorRaw = color;
-    unsigned int alpha = (color & 0xff000000) >> 24;
-    unsigned int red   = (color & 0x00ff0000) >> 16;
-    unsigned int green = (color & 0x0000ff00) >> 8;
-    unsigned int blue  = (color & 0x000000ff);
-    colorValue = QColor(red, green, blue, alpha);
+    modified = true;
+    mSetRawColor(color);
 }
 
 QColor ThemeItem::getColor()
@@ -23,4 +35,21 @@ QColor ThemeItem::getColor()
 int ThemeItem::getRawColor()
 {
     return colorRaw;
+}
+
+bool ThemeItem::isModified()
+{
+    return modified;
+}
+
+void ThemeItem::resetToDefault()
+{
+    colorRaw = oldColorRaw;
+    colorValue = oldColorValue;
+    modified = false;
+}
+
+void ThemeItem::resetModify()
+{
+    modified = false;
 }
