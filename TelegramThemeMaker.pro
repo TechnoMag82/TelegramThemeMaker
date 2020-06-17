@@ -42,3 +42,8 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
         dialogs/aboutdialog.ui
+
+TRANSLATIONS += main_ru.ts
+
+RESOURCES += \
+    appresources.qrc

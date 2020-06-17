@@ -203,7 +203,7 @@ void MainWindow::gotoSearchPosition()
     QModelIndex index = ui->tableViewColors->model()->index(findedPositions->at(currentSearchPosition), 0);
     ui->tableViewColors->setCurrentIndex(index);
     ui->tableViewColors->scrollTo(index);
-    ui->labelFinded->setText(QString("%1 of %2").arg(QString::number(currentSearchPosition + 1), QString::number(findedCount + 1)));
+    ui->labelFinded->setText(QString(tr("%1 of %2")).arg(QString::number(currentSearchPosition + 1), QString::number(findedCount + 1)));
 }
 
 void MainWindow::setThemeChangeStatus()
@@ -224,7 +224,7 @@ void MainWindow::createTableColorsPopupMenu()
     action = new QAction(tr("Copy view color"), this);
     popupMenuTableColors->addAction(action);
     connect(action, &QAction::triggered, this, &MainWindow::copyViewColor);
-    action = new QAction(tr("ResetColorToDefault"), this);
+    action = new QAction(tr("Reset color to default"), this);
     popupMenuTableColors->addAction(action);
     connect(action, &QAction::triggered, this, &MainWindow::resetColorToDefault);
 }
@@ -267,11 +267,11 @@ void MainWindow::searchName(const QString text)
             gotoSearchPosition();
         } else {
             findedCount = 0;
-            ui->labelFinded->setText(QString("0 of 0"));
+            ui->labelFinded->setText(QString(tr("0 of 0")));
         }
     } else {
         findedCount = 0;
-        ui->labelFinded->setText(QString("0 of 0"));
+        ui->labelFinded->setText(QString(tr("0 of 0")));
     }
 }
 
