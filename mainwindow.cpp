@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->tableViewColors->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->tableViewColors->verticalHeader()->setFixedWidth(60);
+    ui->tableViewColors->setItemDelegate(new ThemeItemDelegate(ui->tableViewColors));
+    ui->tableViewColors->setEditTriggers(QAbstractItemView::SelectedClicked);
     ui->labelWP->setVisible(false);
     ui->tableViewColors->setContextMenuPolicy(Qt::CustomContextMenu);
     theme = new QList<ThemeItem*>();

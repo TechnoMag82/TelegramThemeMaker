@@ -17,6 +17,7 @@
 #include "themetablemodel.h"
 #include "dialogs/aboutdialog.h"
 #include "utils.h"
+#include "themeitemdelegate.h"
 
 namespace Ui {
 class MainWindow;

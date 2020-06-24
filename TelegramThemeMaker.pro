@@ -29,7 +29,8 @@ SOURCES += \
     themeitem.cpp \
     themeloader.cpp \
     dialogs/aboutdialog.cpp \
-    themetablemodel.cpp
+    themetablemodel.cpp \
+    themeitemdelegate.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +38,8 @@ HEADERS += \
     themeloader.h \
     dialogs/aboutdialog.h \
     themetablemodel.h \
-    utils.h
+    utils.h \
+    themeitemdelegate.h
 
 FORMS += \
         mainwindow.ui \
