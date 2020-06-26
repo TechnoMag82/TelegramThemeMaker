@@ -16,10 +16,10 @@
 class ThemeTableModel : public QAbstractTableModel
 {
     Q_OBJECT
-    private:
-        int size;
-        QList<ThemeItem*> *theme = nullptr;
-        QString mAppPath;
+
+    int size;
+    QList<ThemeItem*> *theme = nullptr;
+    QString mAppPath;
 
     public:
         explicit ThemeTableModel(QObject *parent, QString appPath);

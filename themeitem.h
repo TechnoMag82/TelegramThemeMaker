@@ -6,24 +6,25 @@
 
 class ThemeItem
 {
-private:
     int colorRaw;
     QColor colorValue;
     int oldColorRaw;
     QColor oldColorValue;
     bool modified;
-    void mSetRawColor(int color);
 
-public:
-    ThemeItem();
-    ThemeItem(QString name, int color);
-    QString name;
-    void setRawColor(int color);
-    QColor getColor();
-    int getRawColor();
-    bool isModified();
-    void resetToDefault();
-    void resetModify();
+    public:
+        ThemeItem();
+        ThemeItem(QString name, int color);
+        QString name;
+        void setRawColor(int color);
+        QColor getColor();
+        int getRawColor();
+        bool isModified();
+        void resetToDefault();
+        void resetModify();
+
+    private:
+        void mSetRawColor(int color);
 };
 
 #endif // THEMEITEM_H
