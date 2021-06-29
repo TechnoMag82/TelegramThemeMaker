@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDateTime>
+#include <QDataStream>
+#include <QFile>
 
 #include "themeitem.h"
 
