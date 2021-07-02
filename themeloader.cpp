@@ -8,7 +8,7 @@ ThemeLoader::ThemeLoader()
 void ThemeLoader::loadTheme(QString filePath, QList<ThemeItem *> &theme)
 {
     QFile file(filePath);
-    if(file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) {
         theme.clear();
         QTextStream stream(&file);
         while (!stream.atEnd()) {
@@ -41,7 +41,7 @@ void ThemeLoader::saveTheme(QString filePath, QList<ThemeItem *> &theme, QString
     QFileInfo fi(filePath);
     makeDirIfNotExist(fi.absolutePath());
     QFile file(filePath);
-    if(file.open(QIODevice::WriteOnly)) {
+    if (file.open(QIODevice::WriteOnly)) {
         ThemeItem *item = nullptr;
         QTextStream stream(&file);
         int size = theme.count();
@@ -96,15 +96,15 @@ void ThemeLoader::getImageFile(QString filePath, qint64 startPos)
     QFile file(filePath);
     int sizeForRead = file.size() - startPos - 5;
     char *data = new char[sizeForRead];
-    if(file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) {
         QDataStream stream(&file);
         int skipped = stream.skipRawData(startPos);
         if (skipped != -1) {
             int readed = stream.readRawData(data, sizeForRead);
             if (readed != -1) {
-                mWallpaperPath = "wallpaper-" + QDateTime::currentDateTime().toString("dd.MM.yyyy_hh:mm:ss") + ".jpg";
+                mWallpaperPath = "wallpaper-" + QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss") + ".jpg";
                 QFile imgFile(mWallpaperPath);
-                if(imgFile.open(QIODevice::WriteOnly)) {
+                if (imgFile.open(QIODevice::WriteOnly)) {
                     QDataStream out_stream(&imgFile);
                     out_stream.writeRawData(data, readed);
                     imgFile.close();
@@ -124,12 +124,12 @@ void ThemeLoader::saveImageTheme(QString filePath, QString imagePath)
     const char *wps = "WPS\n";
     const char *wpe = "\nWPE\n";
     char *imgData = new char[sizeImageForRead];
-    if(imgFile.open(QIODevice::ReadOnly)) {
+    if (imgFile.open(QIODevice::ReadOnly)) {
         QDataStream stream(&imgFile);
         int readed = stream.readRawData(imgData, sizeImageForRead);
         if (readed != -1) {
             QFile themeFile(filePath);
-            if(themeFile.open(QIODevice::ReadWrite)) {
+            if (themeFile.open(QIODevice::ReadWrite)) {
                 sizeThemeForRead = themeFile.size();
                 char *themeData = new char[sizeThemeForRead];
                 QDataStream out_stream(&themeFile);
