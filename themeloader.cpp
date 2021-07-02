@@ -48,12 +48,6 @@ void ThemeLoader::saveTheme(QString filePath, QList<ThemeItem *> &theme, QString
         for (int i = 0; i < size; i++) {
             item = theme.at(i);
             item->resetModify();
-            if (item->name.contains("chat_wallpaper")
-                    && !imagePath.isNull()
-                    && !imagePath.isEmpty())
-            {
-                continue;
-            }
             stream << item->name << "=" << item->getRawColor() << "\n";
         }
         if (!imagePath.isNull() && !imagePath.isEmpty()) {
