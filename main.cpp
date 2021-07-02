@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     app.installTranslator(&myTranslator);
     QCoreApplication::setOrganizationName("TechnoMag");
     QCoreApplication::setApplicationName("Telegram Theme Maker") ;
-    QCoreApplication::setApplicationVersion("1.3");
+    QCoreApplication::setApplicationVersion("1.4");
     MainWindow w;
     w.show();
 
