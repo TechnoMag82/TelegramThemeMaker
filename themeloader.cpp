@@ -9,6 +9,7 @@ void ThemeLoader::loadTheme(QString filePath, QList<ThemeItem *> &theme)
 {
     QFile file(filePath);
     if (file.open(QIODevice::ReadOnly)) {
+        qDeleteAll(theme);
         theme.clear();
         QTextStream stream(&file);
         while (!stream.atEnd()) {
