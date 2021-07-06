@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelWP->setVisible(false);
     ui->tableViewColors->setContextMenuPolicy(Qt::CustomContextMenu);
     theme = new QList<ThemeItem*>();
-    findedPositions = new QList<int>();
+    findedThemeItems = new QList<ThemeItem*>();
     initMainMenu();
     initTableViewColors();
     createTableColorsPopupMenu();
@@ -79,10 +79,10 @@ MainWindow::~MainWindow()
     loader->deleteTempImageWallpaper(wpPath);
     delete loader;
     theme->clear();
-    findedPositions->clear();
+    findedThemeItems->clear();
     delete mStatusBarText;
     delete popupMenuTableColors;
-    delete findedPositions;
+    delete findedThemeItems;
     delete theme;
     delete ui;
 }
@@ -179,12 +179,6 @@ void MainWindow::initTableViewColors()
 
     connect(ui->lineEditSearch, SIGNAL(textEdited(QString)),
             this, SLOT(searchName(QString)));
-
-    connect(ui->pushButtonPrev, SIGNAL(clicked()),
-            this, SLOT(prevSearch()));
-
-    connect(ui->pushButtonNext, SIGNAL(clicked()),
-            this, SLOT(nextSearch()));
 }
 
 void MainWindow::saveTheme(QString filePath)
@@ -198,14 +192,6 @@ void MainWindow::saveTheme(QString filePath)
     delete loader;
     wallpaperChanged = false;
     setThemeChangeStatus();
-}
-
-void MainWindow::gotoSearchPosition()
-{
-    QModelIndex index = ui->tableViewColors->model()->index(findedPositions->at(currentSearchPosition), 0);
-    ui->tableViewColors->setCurrentIndex(index);
-    ui->tableViewColors->scrollTo(index);
-    ui->labelFinded->setText(QString(tr("%1 of %2")).arg(QString::number(currentSearchPosition + 1), QString::number(findedCount + 1)));
 }
 
 void MainWindow::setThemeChangeStatus()
@@ -257,39 +243,24 @@ void MainWindow::searchName(const QString text)
 {
     int themeSize = theme->size();
     if (theme != nullptr && themeSize > 0 && text.size() >= 3) {
-        findedPositions->clear();
+        findedThemeItems->clear();
         for (int i = 0; i < themeSize; i++) {
-            if (theme->at(i)->name.contains(text, Qt::CaseInsensitive)) {
-                findedPositions->append(i);
+            ThemeItem *item = theme->at(i);
+            if (item->name.contains(text, Qt::CaseInsensitive)) {
+                findedThemeItems->append(item);
             }
         }
-        if (findedPositions->size() > 0) {
-            currentSearchPosition = 0;
-            findedCount = findedPositions->size() - 1;
-            gotoSearchPosition();
+        if (findedThemeItems->size() > 0) {
+            ui->labelFinded->setText(QString(tr("found %1 items"))
+                                     .arg(QString::number(findedThemeItems->size())));
+            model->assignData(findedThemeItems);
         } else {
-            findedCount = 0;
-            ui->labelFinded->setText(QString(tr("0 of 0")));
+            model->assignData(theme);
+            ui->labelFinded->setText(QString(tr("found 0 items")));
         }
     } else {
-        findedCount = 0;
-        ui->labelFinded->setText(QString(tr("0 of 0")));
-    }
-}
-
-void MainWindow::prevSearch()
-{
-    if (findedCount > 0 && currentSearchPosition > 0) {
-        currentSearchPosition--;
-        gotoSearchPosition();
-    }
-}
-
-void MainWindow::nextSearch()
-{
-    if (findedCount > 0 && currentSearchPosition < findedCount) {
-        currentSearchPosition++;
-        gotoSearchPosition();
+        model->assignData(theme);
+        ui->labelFinded->setText(QString(tr("found 0 items")));
     }
 }
 
@@ -389,6 +360,7 @@ void MainWindow::exitApp()
         if (messageBox->exec() == QMessageBox::Yes) {
             saveTheme(openedThemePath);
         }
+        delete messageBox;
     }
     close();
 }

@@ -28,11 +28,9 @@ class MainWindow : public QMainWindow
 
     Ui::MainWindow *ui;
     QList<ThemeItem *> *theme = nullptr;
-    QList<int> *findedPositions = nullptr;
+    QList<ThemeItem *> *findedThemeItems = nullptr;
     QMenu *popupMenuTableColors = nullptr;
     QLabel *mStatusBarText = nullptr;
-    int currentSearchPosition = -1;
-    int findedCount = 0;
     bool wallpaperChanged = false;
     ThemeTableModel *model = nullptr;
     ThemeItem *mCurrentThemeItem = nullptr;
@@ -49,7 +47,6 @@ class MainWindow : public QMainWindow
         void initMainMenu();
         void initTableViewColors();
         void saveTheme(QString filePath);
-        void gotoSearchPosition();
         void setThemeChangeStatus();
         void createTableColorsPopupMenu();
         void initStatusBar();
@@ -61,8 +58,6 @@ class MainWindow : public QMainWindow
         void saveTheme();
         void doubleClicked1(const QModelIndex &index);
         void searchName(const QString text);
-        void prevSearch();
-        void nextSearch();
         void aboutDialog();
         void deleteWallpaper();
         void selectWallpaper();

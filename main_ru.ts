@@ -32,161 +32,167 @@
         <translation type="unfinished">Введите название элемента чтобы найти цвет</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="98"/>
         <source>Prev</source>
-        <translation type="unfinished">Пред</translation>
+        <translation type="obsolete">Пред</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="117"/>
         <source>Next</source>
-        <translation type="unfinished">След</translation>
+        <translation type="obsolete">След</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="150"/>
+        <location filename="mainwindow.ui" line="118"/>
         <source>Wallpaper</source>
         <translation type="unfinished">Фон в чате</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="169"/>
+        <location filename="mainwindow.ui" line="137"/>
         <source>File</source>
         <translation type="unfinished">Файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="178"/>
+        <location filename="mainwindow.ui" line="146"/>
         <source>Theme</source>
         <translation type="unfinished">Тема</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="188"/>
+        <location filename="mainwindow.ui" line="156"/>
         <source>Help</source>
         <translation type="unfinished">Помощь</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="199"/>
+        <location filename="mainwindow.ui" line="167"/>
         <source>Open ...</source>
         <translation type="unfinished">Открыть ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="210"/>
+        <location filename="mainwindow.ui" line="178"/>
         <source>Save As ...</source>
         <translation type="unfinished">Сохранить как ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="221"/>
+        <location filename="mainwindow.ui" line="189"/>
         <source>Apply filter</source>
         <translation type="unfinished">Применить фильтр</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="194"/>
         <source>Save</source>
         <translation type="unfinished">Сохранить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="234"/>
-        <location filename="mainwindow.cpp" line="383"/>
+        <location filename="mainwindow.ui" line="202"/>
+        <location filename="mainwindow.cpp" line="356"/>
         <source>Exit</source>
         <translation type="unfinished">Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="239"/>
+        <location filename="mainwindow.ui" line="207"/>
         <source>Select Wallpaper ...</source>
         <translation type="unfinished">Выбрать фон для чата ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="244"/>
+        <location filename="mainwindow.ui" line="212"/>
         <source>About</source>
         <translation type="unfinished">О программе</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="249"/>
+        <location filename="mainwindow.ui" line="217"/>
         <source>Delete Wallpaper</source>
         <translation type="unfinished">Удалить фон</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="254"/>
+        <location filename="mainwindow.ui" line="222"/>
         <source>Add view color ...</source>
         <translation type="unfinished">Добавить цвет ...</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="259"/>
-        <location filename="mainwindow.cpp" line="359"/>
+        <location filename="mainwindow.ui" line="227"/>
+        <location filename="mainwindow.cpp" line="332"/>
         <source>Delete view color</source>
         <translation type="unfinished">Удалить цвет</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="30"/>
+        <location filename="mainwindow.cpp" line="32"/>
         <source>Items: %1</source>
         <translation type="unfinished">Элементов: %1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="122"/>
         <source>Open Theme</source>
         <translation type="unfinished">Открыть тему</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="132"/>
-        <location filename="mainwindow.cpp" line="308"/>
+        <location filename="mainwindow.cpp" line="134"/>
+        <location filename="mainwindow.cpp" line="281"/>
         <source>No Wallpaper</source>
         <translation type="unfinished">Нет изображения</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="157"/>
         <source>Save Theme</source>
         <translation type="unfinished">Сохранить тему</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="206"/>
         <source>%1 of %2</source>
-        <translation type="unfinished">%1 из %2</translation>
+        <translation type="obsolete">%1 из %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="221"/>
+        <location filename="mainwindow.cpp" line="209"/>
         <source>Copy view name</source>
         <translation type="unfinished">Копировать название элемента</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="224"/>
+        <location filename="mainwindow.cpp" line="212"/>
         <source>Copy view color</source>
         <translation type="unfinished">Копировать цвет</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="227"/>
+        <location filename="mainwindow.cpp" line="215"/>
         <source>Reset color to default</source>
         <translation type="unfinished">Вернуть цвет по-умолчанию</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="244"/>
+        <location filename="mainwindow.cpp" line="232"/>
         <source>Color for </source>
         <translation type="unfinished">Цвет для </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="270"/>
-        <location filename="mainwindow.cpp" line="274"/>
         <source>0 of 0</source>
-        <translation type="unfinished">0 из 0</translation>
+        <translation type="obsolete">0 из 0</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="319"/>
+        <location filename="mainwindow.cpp" line="254"/>
+        <source>found %1 items</source>
+        <translation type="unfinished">Найдено %1 элементов</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="259"/>
+        <location filename="mainwindow.cpp" line="263"/>
+        <source>found 0 items</source>
+        <translation type="unfinished">найдено 0 элементов</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="292"/>
         <source>Open Wallpaper</source>
         <translation type="unfinished">Открыть изображение</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="338"/>
+        <location filename="mainwindow.cpp" line="311"/>
         <source>New view color</source>
         <translation type="unfinished">Новый цвет</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="339"/>
+        <location filename="mainwindow.cpp" line="312"/>
         <source>View name:</source>
         <translation type="unfinished">Название элемента:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="360"/>
+        <location filename="mainwindow.cpp" line="333"/>
         <source>Do you want to remove view color &apos;%1&apos;?</source>
         <translation type="unfinished">Удалить цвет элемента &apos;%1&apos;?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="384"/>
+        <location filename="mainwindow.cpp" line="357"/>
         <source>Theme has been changed. Do you want to save changes?</source>
         <translation type="unfinished">Тема была изменена. Сохранить изменения?</translation>
     </message>
