@@ -10,6 +10,7 @@
 #include <QBrush>
 #include <QColor>
 #include <QFileInfo>
+#include <QPixmapCache>
 
 #include "themeitem.h"
 
@@ -23,6 +24,7 @@ class ThemeTableModel : public QAbstractTableModel
 
     public:
         explicit ThemeTableModel(QObject *parent, QString appPath);
+        ~ThemeTableModel();
 
         void assignData(QList<ThemeItem*> *atheme);
         void refreshData();

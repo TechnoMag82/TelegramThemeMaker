@@ -84,6 +84,9 @@ MainWindow::~MainWindow()
     delete popupMenuTableColors;
     delete findedThemeItems;
     delete theme;
+    if (model != nullptr) {
+        delete model;
+    }
     delete ui;
 }
 

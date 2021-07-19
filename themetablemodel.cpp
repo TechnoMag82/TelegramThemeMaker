@@ -6,6 +6,11 @@ ThemeTableModel::ThemeTableModel(QObject *parent, QString appPath)
     mAppPath = appPath;
 }
 
+ThemeTableModel::~ThemeTableModel()
+{
+    QPixmapCache::clear();
+}
+
 void ThemeTableModel::assignData(QList<ThemeItem *> *atheme)
 {
     beginResetModel();
@@ -44,7 +49,12 @@ QVariant ThemeTableModel::data(const QModelIndex &index, int role) const
         QString imagePath = mAppPath + "/views/" + ti->name + ".png";
         QFileInfo file(imagePath);
         if (file.exists()) {
-            return QPixmap(imagePath);
+            QPixmap pixmap;
+            if (!QPixmapCache::find(imagePath, &pixmap)) {
+                pixmap.load(imagePath);
+                QPixmapCache::insert(imagePath, pixmap);
+            }
+            return pixmap;
         } else {
             return QVariant();
         }
